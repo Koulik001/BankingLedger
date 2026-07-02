@@ -15,4 +15,10 @@ router.post('/', authMiddleware.authUser, transactionController.createTransactio
  */
 router.post('/system/initial-funds', authMiddleware.authSystemUser, transactionController.createInitialFundsTransaction)
 
+/**
+ * GET /api/transactions/:ac_id/history
+ * Get ledger history for an account
+ */
+router.get('/:ac_id/history', authMiddleware.authUser, transactionController.getTransactionHistoryController)
+
 module.exports = router

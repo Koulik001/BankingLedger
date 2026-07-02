@@ -1,4 +1,4 @@
-CREATE EXTENSION INF NOT EXISTS "pgcrypto";
+CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 
 CREATE TABLE IF NOT EXISTS users(
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS users(
 
 CREATE TABLE IF NOT EXISTS accounts(
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_id UUID NOT NULL KEY REFERENCES users(id),
+    user_id UUID NOT NULL REFERENCES users(id),
     status TEXT NOT NULL DEFAULT 'ACTIVE' CHECK(status IN('ACTIVE', 'FROZEN', 'CLOSED')),
     currency TEXT NOT NULL DEFAULT 'INR',
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
@@ -21,8 +21,8 @@ CREATE TABLE IF NOT EXISTS accounts(
 
 CREATE TABLE IF NOT EXISTS transactions(
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    from_ac_id UUID NOT NULL KEY REFERENCES accounts(id),
-    to_ac_id UUID NOT NULL KEY REFERENCES accounts(id),
+    from_ac_id UUID NOT NULL REFERENCES accounts(id),
+    to_ac_id UUID NOT NULL REFERENCES accounts(id),
     amount NUMERIC(15, 2) NOT NULL CHECK(amount > 0),
     status TEXT NOT NULL DEFAULT 'PENDING' CHECK(status IN ('PENDING', 'COMPLETED', 'FAILED', 'REVERSED')),
     idempotency_key TEXT NOT NULL UNIQUE,

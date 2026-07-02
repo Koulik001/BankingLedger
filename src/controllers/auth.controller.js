@@ -47,7 +47,7 @@ async function loginUser(req, res){
     const user = await userModel.findByEmailWithPassword(email);
 
     if(!user){
-        res.status(401).send({
+        return res.status(401).send({
             message: "Invalid credentials"
         })
     }

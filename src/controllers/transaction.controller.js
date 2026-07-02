@@ -171,7 +171,7 @@ async function createTransactionController(req, res){
         }catch(err){
             await client.query("ROLLBACK")
             console.log("Some unexpected DB error: ", err)
-            await emailService.sendTransactionFailureEmail(req.user.email, req.user.name, amount, to_ac)
+            await emailService.sendTransactionFailureEmail(req.user.email, req.user.name, roundedAmount, to_ac)
             return res.status(500).json({
                 message: "Transaction failed, please retry"
             })
@@ -179,7 +179,7 @@ async function createTransactionController(req, res){
             client.release()
         }
 
-        await emailService.sendTransactionEmail(req.user.email,req.user.name, amount, to_ac) 
+        await emailService.sendTransactionEmail(req.user.email,req.user.name, roundedAmount, to_ac) 
 
         return res.status(201).json({
             message: "Transaction completed successfully",
@@ -323,7 +323,27 @@ async function createInitialFundsTransaction(req, res){
     }
 }
 
+/**
+ * Get the transaction history of an account (recent transaction first)
+ */
+
+async function getTransactionHistoryController(req, res){
+    const { ac_id } = req.params
+
+    const account = await accountModel.findByIdAndUserId(ac_id, req.user.id)
+    if(!account){
+        return res.status(403).json({
+            message: "Account not found or access denied"
+        })
+    }
+
+    const history = await transactionModel.findByAcId(ac_id)
+
+    return res.status(200).json({ history })
+}
+
 module.exports = {
     createTransactionController,
-    createInitialFundsTransaction
+    createInitialFundsTransaction,
+    getTransactionHistoryController
 }

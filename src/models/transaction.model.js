@@ -44,9 +44,25 @@ async function updateStatus(client, txn_id, status) {
     return result.rows[0]
 }
 
+/**
+ * Get all transactions where this account was sender or receiver
+ * Returns the user-facing transaction history
+ * Used in - getTransactionHistoryController
+ */
+
+async function findByAcId(ac_id){
+    const result = await db.query(
+        `SELECT id, from_ac_id, to_ac_id, amount, status, created_at
+        FROM transactions 
+        WHERE from_ac_id = $1 OR to_ac_id = $1
+        ORDER BY created_at DESC`, [ ac_id ]
+    )
+    return result.rows
+}
 
 module.exports = {
     findByIdempotencyKey,
     createTransaction,
-    updateStatus
+    updateStatus,
+    findByAcId
 }

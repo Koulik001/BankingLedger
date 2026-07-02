@@ -36,17 +36,16 @@ async function findByAcId(ac_id){
  * Should return exactly two rows one for debit and another for credit
  */
 
-async function findByTxnId(txn_id){
-    const result = db.query(
-        `SELECT id, ac_id, amount, type, created_at
-        FROM ledger_entries WHERE transaction_id = $1
-        ORDER BY type ASC`, [ txn_id ]
-    )
-    return result.rows
-}
+// async function findByTxnId(txn_id){
+//     const result = await db.query(
+//         `SELECT id, ac_id, amount, type, created_at
+//         FROM ledger_entries WHERE transaction_id = $1
+//         ORDER BY type ASC`, [ txn_id ]
+//     )
+//     return result.rows
+// }
 
 module.exports = {
     createLedgerEntry, 
-    findByAcId, 
-    findByTxnId
+    findByAcId
 }
