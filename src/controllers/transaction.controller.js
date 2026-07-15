@@ -116,12 +116,14 @@ async function createTransactionController(req, res){
         let transaction 
         try{
             await client.query("BEGIN")
-            // Lock sender account row first
-            // Any concurrent transaction trying to debit this account locks till commit or rollback
+            // Lock both sender and receiver rows lock applied on smaller UUID first
+            // Any concurrent transaction trying to operate on both the accounts locks till commit or rollback
+            const [firstId, secondId] = [from_ac, to_ac].sort()
             await client.query(
                 `SELECT id FROM accounts
-                WHERE id = $1
-                FOR UPDATE`, [ from_ac ]
+                WHERE id IN ($1, $2)
+                ORDER BY id
+                FOR UPDATE`, [ firstId, secondId ]
             )
             // Check sender balance under applied lock
             const avlBalance = await client.query(
