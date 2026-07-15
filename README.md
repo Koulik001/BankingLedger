@@ -99,15 +99,13 @@ Without locking, two concurrent transfer requests for the same account could bot
 
 The fix: lock the sender's account row inside the transaction block before computing balance.
 
-```sql
--- Locks the account row — concurrent debits on this account
+sql-- Locks the account row — concurrent debits on this account
 -- block here until the first transaction commits or rolls back
 SELECT id FROM accounts WHERE id = $1 FOR UPDATE
-```
 
 After the lock, the balance is computed. Any concurrent debit sees the real post-commit balance rather than a stale pre-commit read.
 
-Important: `FOR UPDATE` cannot be used with aggregate functions in PostgreSQL. This is why we lock the account row itself rather than the ledger entries — the account row is the single point of contention regardless of how many ledger entries exist.
+Important: FOR UPDATE cannot be used with aggregate functions in PostgreSQL. This is why we lock the account row itself rather than the ledger entries — the account row is the single point of contention regardless of how many ledger entries exist.
 
 ### 6. Idempotency Keys
 
