@@ -6,9 +6,9 @@ export let options = {
     duration: "30s"
 }
 
-const BASE_URL = "http://localhost:3000"
-const TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1NTVjYTZjMy00M2QzLTQzYWUtOTU3NC1lNWMyNWE5ZWM4YjgiLCJpYXQiOjE3ODgyODk0NDYsImV4cCI6MTc4ODU0ODY0Nn0.AofunoqcSfdudw41-IzNFR19pBYTW_1rTazLEz88VYA"
-const ACCOUNT_ID = "3acf0d0a-4258-444d-b528-0f03604c3cdf"
+const BASE_URL = "https://bankingledger.onrender.com"
+const TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJkNWZkMDVhOC0wZjI4LTRhMGItOGVlZS05Zjk4ZDBkMGIyZGIiLCJpYXQiOjE3ODg0Njc4MzEsImV4cCI6MTc4ODcyNzAzMX0.UsDWQTHAhUSZH79uTfyINc0MIWR2zDd4V0kxZNj-Los"
+const ACCOUNT_ID = "560833c3-ec51-45cb-9c0f-b195b4006f8b"
 
 export default function () {
     const res = http.get(
